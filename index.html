@@ -14,7 +14,7 @@
       background: radial-gradient(circle at center, rgba(160, 200, 40, 0.12) 0%, #101511 70%);
       display: flex; align-items: center; justify-content: center;
       opacity: 1;
-      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      visibility: visible;
     }
     #boot-loader.is-hidden {
       opacity: 0;
@@ -30,9 +30,7 @@
       stroke: #C8E632;
       stroke-dasharray: 283;
       stroke-dashoffset: 283;
-      animation: ring-fill 1.6s ease-in-out forwards;
     }
-    @keyframes ring-fill { to { stroke-dashoffset: 0; } }
   </style>
 </head>
 <body>

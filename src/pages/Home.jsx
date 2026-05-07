@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
@@ -16,12 +16,16 @@ export default function Home({ appReady }) {
   const [storiesCollapsed, setStoriesCollapsed] = useState(true);
   const storiesListRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current || !appReady) return;
+    const splits = [];
     const ctx = gsap.context(() => {
+      gsap.set('.programs-container', { x: 0, force3D: true });
+      gsap.set('.hero-bird', { xPercent: -50, yPercent: -50 });
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       tl.from('.hero-bg',          { scale: 1.15, duration: 2.4, ease: 'power2.out' }, 0)
-        .from('.hero-bird',        { scale: 1.06, y: 30, opacity: 0, duration: 1.4 }, 0.1)
+        .from('.hero-bird',        { xPercent: -50, yPercent: -50, scale: 1.06, y: 30, opacity: 0, duration: 1.4 }, 0.1)
         .from('.giant-letter',     {
           y: 160, opacity: 0, rotateX: -45, transformOrigin: '50% 100%',
           duration: 1.2, stagger: 0.06, ease: 'power4.out',
@@ -33,41 +37,36 @@ export default function Home({ appReady }) {
 
       gsap.to('.hero-bird', { y: '-=8', yoyo: true, repeat: -1, duration: 4.2, ease: 'sine.inOut' });
 
-      gsap.to('.hero-bg',    { yPercent: 12,             ease: 'none', scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 0.8 } });
-      gsap.to('.hero-bird',  { yPercent: 28, scale: 1.04, ease: 'none', scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+      gsap.to('.hero-bg',    { yPercent: 10,             ease: 'none', scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true } });
+      gsap.to('.hero-bird',  { xPercent: -50, yPercent: -28, scale: 1.03, ease: 'none', scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true } });
       document.querySelectorAll('.giant-letter-wrap').forEach((wrap) => {
         const speed = parseFloat(wrap.dataset.speed) || 1;
         gsap.to(wrap, {
           y: -120 * speed, ease: 'none',
-          scrollTrigger: { trigger: '.hero-section', start: 'top top', end: '70% top', scrub: 0.6 },
+          scrollTrigger: { trigger: '.hero-section', start: 'top top', end: '70% top', scrub: 0.25, fastScrollEnd: true },
         });
       });
       gsap.to('.hero-content', {
         y: -50, opacity: 0, ease: 'none',
-        scrollTrigger: { trigger: '.hero-section', start: '25% top', end: '75% top', scrub: 0.6 },
+        scrollTrigger: { trigger: '.hero-section', start: '25% top', end: '75% top', scrub: 0.25, fastScrollEnd: true },
       });
 
       gsap.utils.toArray('.gallery-item').forEach((item, i) => {
-        gsap.fromTo(item, { clipPath: 'inset(100% 0 0 0)', y: 50 }, {
-          clipPath: 'inset(0% 0 0 0)', y: 0, duration: 1.1, ease: 'power3.out',
+        gsap.fromTo(item, { opacity: 0, y: 44 }, {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
           delay: (i % 5) * 0.05,
-          scrollTrigger: { trigger: item, start: 'top 92%', toggleActions: 'play none none reverse' },
-        });
-        const speed = parseFloat(item.dataset.speed) || 1;
-        gsap.to(item.querySelector('img'), {
-          yPercent: (speed - 1) * 40, ease: 'none',
-          scrollTrigger: { trigger: item, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+          scrollTrigger: { trigger: item, start: 'top 92%', toggleActions: 'play none none none' },
         });
       });
 
       gsap.to('.mission-text .word', {
-        opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out',
+        opacity: 1, y: 0, ease: 'power2.out',
         duration: 0.8, stagger: 0.045,
-        scrollTrigger: { trigger: '.mission-section', start: 'top 65%', end: 'top 10%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.mission-section', start: 'top 65%', end: 'top 10%', toggleActions: 'play none none none' },
       });
       gsap.from('#mission-cta', {
         y: 40, opacity: 0, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: '#mission-cta', start: 'top 88%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '#mission-cta', start: 'top 88%', toggleActions: 'play none none none' },
       });
 
       const titleLines = document.querySelectorAll('#possibilities-title .line-inner');
@@ -75,20 +74,21 @@ export default function Home({ appReady }) {
         { yPercent: 115 },
         {
           yPercent: 0, duration: 1.05, ease: 'power4.out', stagger: 0.14,
-          scrollTrigger: { trigger: '.possibilities-section', start: 'top 78%', toggleActions: 'play none none reverse' },
+          scrollTrigger: { trigger: '.possibilities-section', start: 'top 78%', toggleActions: 'play none none none' },
         }
       );
       gsap.from('.possibilities-icon', {
         scale: 0, rotate: -90, opacity: 0, duration: 0.8, ease: 'back.out(1.7)',
-        scrollTrigger: { trigger: '.possibilities-section', start: 'top 78%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.possibilities-section', start: 'top 78%', toggleActions: 'play none none none' },
       });
 
       const desc = document.getElementById('possibilities-desc');
       if (desc) {
         const split = new SplitType(desc, { types: 'words' });
+        splits.push(split);
         gsap.from(split.words, {
           opacity: 0, y: 18, duration: 0.7, stagger: 0.018, ease: 'power2.out',
-          scrollTrigger: { trigger: desc, start: 'top 82%', toggleActions: 'play none none reverse' },
+          scrollTrigger: { trigger: desc, start: 'top 82%', toggleActions: 'play none none none' },
         });
       }
 
@@ -96,28 +96,45 @@ export default function Home({ appReady }) {
         gsap.from(card, {
           y: 100, opacity: 0, rotateX: 14, rotateY: -6,
           transformPerspective: 1200, duration: 1, ease: 'power3.out', delay: i * 0.1,
-          scrollTrigger: { trigger: '.cards-grid', start: 'top 80%', toggleActions: 'play none none reverse' },
+          scrollTrigger: { trigger: '.cards-grid', start: 'top 80%', toggleActions: 'play none none none' },
         });
       });
 
-      const programsContainer = document.querySelector('.programs-container');
-      if (programsContainer) {
+      const programsContainer = rootRef.current.querySelector('.programs-container');
+      const programsSection = rootRef.current.querySelector('.programs-section');
+      if (programsContainer && programsSection) {
+        const horizontalDistance = () => Math.max(0, programsContainer.scrollWidth - window.innerWidth);
+
         gsap.to(programsContainer, {
-          x: () => -(programsContainer.scrollWidth - window.innerWidth),
+          x: () => -horizontalDistance(),
           ease: 'none',
+          force3D: true,
           scrollTrigger: {
-            trigger: '.programs-section',
+            trigger: programsSection,
             pin: true,
             start: 'top top',
-            end: () => '+=' + (programsContainer.scrollWidth - window.innerWidth),
-            scrub: 1,
+            end: () => `+=${horizontalDistance()}`,
+            scrub: 0.85,
+            anticipatePin: 1,
             invalidateOnRefresh: true,
+            fastScrollEnd: true,
+            onEnter: () => programsSection.classList.add('is-scrolling-horizontal'),
+            onEnterBack: () => programsSection.classList.add('is-scrolling-horizontal'),
+            onLeave: () => programsSection.classList.remove('is-scrolling-horizontal'),
+            onLeaveBack: () => programsSection.classList.remove('is-scrolling-horizontal'),
           },
+        });
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => ScrollTrigger.refresh());
         });
       }
     }, rootRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      splits.forEach((split) => split.revert());
+    };
   }, [appReady]);
 
   // Stories auto-rotate when collapsed
@@ -151,7 +168,7 @@ export default function Home({ appReady }) {
         </div>
 
         <div className="hero-bird-wrapper">
-          <img src="/assets/images/colibri.png" alt="Colibrí verde iridiscente" className="hero-bird" />
+          <img src="/assets/images/colibri.webp" alt="Colibrí verde iridiscente" className="hero-bird" />
         </div>
 
         <div className="hero-overlay" aria-hidden="true" />
@@ -231,7 +248,7 @@ export default function Home({ appReady }) {
           <div className="gallery-row gallery-row-top">
             {[1,2,3,4,5].map((n, i) => (
               <div className="gallery-item" data-speed={[0.9,1.05,0.95,1.1,0.9][i]} key={n}>
-                <img src={`/assets/images/gallery-${n}.webp`} alt="" loading="lazy" />
+                <img src={`/assets/images/gallery-${n}.webp`} alt="" loading="eager" decoding="async" />
               </div>
             ))}
           </div>
@@ -242,7 +259,7 @@ export default function Home({ appReady }) {
                 data-speed={[1.05,0.95,1.1,0.9][i]}
                 key={n}
               >
-                <img src={`/assets/images/gallery-${n}.webp`} alt="" loading="lazy" />
+                <img src={`/assets/images/gallery-${n}.webp`} alt="" loading="eager" decoding="async" />
               </div>
             ))}
           </div>
@@ -309,7 +326,7 @@ export default function Home({ appReady }) {
           ].map((c) => (
             <div className="feature-card" id={c.id} key={c.id}>
               <div className="card-image-wrapper">
-                <img src={c.img} alt={c.title} loading="lazy" />
+                <img src={c.img} alt={c.title} loading="eager" decoding="async" />
                 <div className="card-glass-overlay">
                   <h3 className="card-title">{c.title}</h3>
                   <p className="card-desc">{c.desc}</p>
@@ -335,7 +352,7 @@ export default function Home({ appReady }) {
               { logo: '/assets/programs-logos/ecos.svg',  title: 'ECOS',       bg: '/assets/images/ecos-line.webp',     desc: 'Plataforma de comunicación e impacto, amplificando las voces y las historias de quienes protegen la naturaleza.', link: 'IR A ECOS →' },
             ].map((p, i) => (
               <div className="program-panel" key={p.title}>
-                <img src={p.bg} alt={p.title} className="program-bg" loading="lazy" />
+                <img src={p.bg} alt={p.title} className="program-bg" loading="eager" decoding="async" />
                 <div className="program-overlay"></div>
 
                 {i === 0 && (

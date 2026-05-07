@@ -28,5 +28,9 @@ dist-ssr
 
 # Large media files
 *.mp4
+!public/assets/regenera/regenera.mp4
 *.mov
 *.avi
+
+# Generated media sources
+tmp/

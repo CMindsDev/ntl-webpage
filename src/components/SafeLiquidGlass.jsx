@@ -1,9 +1,8 @@
 import GlassFrame from './GlassFrame.jsx';
 
 /**
- * SafeLiquidGlass — a thin wrapper around GlassFrame that catches render
- * errors from the liquid-glass-react WebGL pipeline and falls back to a
- * pure-CSS glass surface instead of crashing the whole page.
+ * SafeLiquidGlass keeps the older call sites readable while GlassFrame handles
+ * the lightweight CSS glass surface.
  */
 export default function SafeLiquidGlass({
   children,

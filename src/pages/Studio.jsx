@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -13,21 +13,99 @@ const galleryImages = [
   '/assets/Studio/studio-gallery-5.webp',
 ];
 
+const portfolioProjects = [
+  {
+    name: 'regen',
+    logo: 'regen',
+    description: 'Iniciativa liderada e implementada por FabLab Perú, centro de innovación de desarrollo de bioeconomía en la Amazonía, en sociedad con BID Lab y Future of Earth de C Minds, en alianza con MIT Center for Bits and Atoms, y en colaboración con más de 4 comunidades indígenas incluyendo al pueblo Ashánika.',
+  },
+  {
+    name: 'yakum',
+    logo: 'yakum',
+    description: 'Iniciativa liderada por Fundación Yakum - ONG que trabaja en la regeneración de bosques amazónicos, soberanía alimentaria y conservación cultural junto con comunidades indígenas -, en sociedad con BID Lab y C Minds, en alianza con Regen Network Development, implementada en Ecuador por la Nación Siekopai.',
+  },
+  {
+    name: 'SeaFlower Wise',
+    logo: 'seaflower',
+    description: 'Iniciativa liderada por la Universidad de Manizales - en sociedad con BID Lab y Future of Earth de C Minds, e implementada en la Reserva Biosfera SeaFlower con AGROSAVIA, Comisión Colombiana de los Océanos (CCO), Universidad de Antioquia, Universidad Militar de Nueva Granada, UNAL, Universidad de la Amazonía, y la comunidad Raizal de San Andrés, Providencia y Santa Catalina.',
+  },
+  {
+    name: 'mano cambiada',
+    logo: 'mano',
+    description: 'Iniciativa liderada e implementada por Mano Cambiada - organización comunitaria que integra tecnología con saberes ancestrales para el desarrollo sostenible - en sociedad con BID Lab y Future of Earth de C Minds, en alianza con Experimentalista, Fundación Macuáticos Colombia, Colectivo de Mujeres, Pininos de Amor, Guardianes del Mar, y Bichos del Mar.',
+  },
+  {
+    name: 'LandPrint',
+    logo: 'landprint',
+    description: 'Iniciativa liderada e implementada por LandPrint, empresa de tecnología de monitoreo para la creación y gestión de activos ambientales digitales, en sociedad con BID Lab y Future of Earth de C Minds, en colaboración con Cacau Amazônia y productores locales de café en Brasil.',
+  },
+  {
+    name: 'Nativas',
+    logo: 'nativas',
+    description: 'Iniciativa liderada por Nativas Climatech LLC, organización dedicada a la restauración de bosques tropicales secos con soluciones tecnológicas, y Ecohome, en sociedad con BID Lab y Future of Earth de C Minds, e implementada por Ecohome con comunidades de Cartama en el departamento de Antioquia en Colombia.',
+  },
+  {
+    name: 'Awake',
+    logo: 'awake',
+    description: 'Iniciativa liderada e implementada por Awake Travel, empresa colombiana de turismo sostenible, en sociedad con BID Lab y Future of Earth de C Minds.',
+  },
+  {
+    name: 'FUNDEMAR',
+    logo: 'fundemar',
+    description: 'Iniciativa liderada e implementada por FUNDEMAR, institución especializada en la implementación de sistemas de monitoreo marinos en el Caribe, en sociedad con BID Lab y Future of Earth de C Minds.',
+  },
+  {
+    name: 'ASMUCACD',
+    logo: 'asmucacd',
+    description: 'Iniciativa liderada e implementada por la Asociación de Mujeres Campesinas Ambientalistas de La Cristalina del Lozada por sus Derechos (ASMUCACD), en sociedad con BID Lab y Future of Earth de C Minds, en alianza y colaboración con Paz y Flora S.A.S., organización que apoya el modelo de conservación liderado por ASMUCACD a través de soluciones basadas en la naturaleza.',
+  },
+  {
+    name: 'ECA Amarakaeri',
+    logo: 'eca-amarakaeri',
+    description: 'Iniciativa liderada por el Ejecutor del Contrato de Administración Amarakaeri (ECA), organización indígena que gestiona la Reserva Comunal Amarakaeri, en sociedad con BID Lab y Future of Earth de C Minds.',
+  },
+  {
+    name: 'Understory',
+    logo: 'understory',
+    description: 'Fondo de inversión enfocado en proyectos de restauración de ecosistemas con el uso de tecnología LiDAR, en sociedad con BID Lab y Future of Earth de C Minds, e implementada en México por Fundación Ejido de San Crisanto.',
+  },
+  {
+    name: 'Savimbo',
+    logo: 'savimbo',
+    description: 'Iniciativa liderada e implementada por Savimbo S.A.S., empresa promotora de la agroforestería regenerativa vinculada con créditos de carbono y tecnología, en sociedad con BID Lab y Future of Earth de C Minds, y en alianza con Savimbo Inc.',
+  },
+];
+
+const portfolioCards = portfolioProjects.map((project, index) => ({
+  ...project,
+  image: galleryImages[index % galleryImages.length],
+}));
+
+const portfolioColumns = [
+  portfolioCards.filter((_, index) => index % 3 === 0),
+  portfolioCards.filter((_, index) => index % 3 === 1),
+  portfolioCards.filter((_, index) => index % 3 === 2),
+];
+
+const PORTFOLIO_COLUMN_REPEATS = 3;
+
 export default function Studio() {
   const rootRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current) return;
 
     const ctx = gsap.context(() => {
+      gsap.set('.studio-subject', { xPercent: -50 });
+
       /* ─── HERO parallax ─── */
       gsap.to('.studio-bg', {
         yPercent: 12, ease: 'none',
-        scrollTrigger: { trigger: '.studio-hero', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+        scrollTrigger: { trigger: '.studio-hero', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
       gsap.to('.studio-subject', {
-        yPercent: 18, scale: 1.03, ease: 'none',
-        scrollTrigger: { trigger: '.studio-hero', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+        xPercent: -50, yPercent: 18, scale: 1.03, ease: 'none',
+        scrollTrigger: { trigger: '.studio-hero', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
 
       /* Hero entrance */
@@ -53,47 +131,67 @@ export default function Studio() {
         );
       });
 
-      /* ─── GALLERY parallax ─── */
-      gsap.fromTo('.studio-gallery',
-        { y: 60 },
-        {
-          y: -40, ease: 'none',
-          scrollTrigger: { trigger: '.studio-gallery', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-        }
-      );
-
-      /* Gallery items stagger in */
-      document.querySelectorAll('.studio-gallery-item').forEach((el, i) => {
-        gsap.from(el, {
-          y: 40, opacity: 0, duration: 0.7, delay: i * 0.1, ease: 'power2.out',
-          scrollTrigger: { trigger: '.studio-gallery', start: 'top 80%', toggleActions: 'play none none reverse' },
-        });
+      /* ─── PORTFOLIO parallax ─── */
+      gsap.from('.studio-gallery', {
+        y: 36, opacity: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '.studio-gallery', start: 'top 86%', toggleActions: 'play none none none' },
       });
+
+      gsap.from('.studio-project-card', {
+        y: 34,
+        opacity: 0,
+        duration: 0.65,
+        stagger: 0.045,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.studio-gallery', start: 'top 78%', toggleActions: 'play none none none' },
+      });
+
+      if (window.matchMedia('(min-width: 769px)').matches) {
+        const columnLoopDistance = (selector) => {
+          const column = document.querySelector(selector);
+          if (!column) return Math.max(320, Math.min(560, window.innerHeight * 0.68));
+          return column.scrollHeight / PORTFOLIO_COLUMN_REPEATS;
+        };
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: '.studio-gallery',
+            start: 'top top',
+            end: () => `+=${Math.max(1500, window.innerHeight * 2.2)}`,
+            pin: true,
+            scrub: 0.85,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        })
+          .fromTo('.studio-portfolio-column--left', { y: () => -columnLoopDistance('.studio-portfolio-column--left') * 1.5 }, { y: () => -columnLoopDistance('.studio-portfolio-column--left') * 0.5, ease: 'none' }, 0)
+          .fromTo('.studio-portfolio-column--middle', { y: () => -columnLoopDistance('.studio-portfolio-column--middle') * 0.5 }, { y: () => -columnLoopDistance('.studio-portfolio-column--middle') * 1.5, ease: 'none' }, 0)
+          .fromTo('.studio-portfolio-column--right', { y: () => -columnLoopDistance('.studio-portfolio-column--right') * 1.5 }, { y: () => -columnLoopDistance('.studio-portfolio-column--right') * 0.5, ease: 'none' }, 0);
+      }
 
       /* Stats reveal */
       document.querySelectorAll('.studio-stat').forEach((el, i) => {
         gsap.from(el, {
           y: 30, opacity: 0, duration: 0.6, delay: i * 0.08, ease: 'power3.out',
-          scrollTrigger: { trigger: '.studio-stats', start: 'top 85%', toggleActions: 'play none none reverse' },
+          scrollTrigger: { trigger: '.studio-stats', start: 'top 85%', toggleActions: 'play none none none' },
         });
       });
 
       /* Main content section */
       gsap.from('.studio-main-image', {
         scale: 0.9, opacity: 0, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: '.studio-main-content', start: 'top 75%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.studio-main-content', start: 'top 75%', toggleActions: 'play none none none' },
       });
 
       gsap.from('.studio-main-text', {
         y: 40, opacity: 0, duration: 0.9, delay: 0.15, ease: 'power3.out',
-        scrollTrigger: { trigger: '.studio-main-content', start: 'top 72%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.studio-main-content', start: 'top 72%', toggleActions: 'play none none none' },
       });
 
-      /* Info cards */
-      document.querySelectorAll('.studio-info-card').forEach((el, i) => {
+      /* Portfolio narrative */
+      document.querySelectorAll('.studio-info-card, .studio-collage-img, .level-item').forEach((el, i) => {
         gsap.from(el, {
-          y: 40, opacity: 0, duration: 0.7, delay: i * 0.1, ease: 'power3.out',
-          scrollTrigger: { trigger: '.studio-info-section', start: 'top 80%', toggleActions: 'play none none reverse' },
+          y: 44, opacity: 0, duration: 0.75, delay: i * 0.08, ease: 'power3.out',
+          scrollTrigger: { trigger: '.studio-info-section', start: 'top 80%', toggleActions: 'play none none none' },
         });
       });
 
@@ -105,7 +203,7 @@ export default function Studio() {
   return (
     <div ref={rootRef}>
       {/* ════════════ HERO ════════════ */}
-      <section className="studio-hero">
+      <section className="studio-hero" id="studio-top">
         <div className="studio-bg-wrapper">
           <img src="/assets/Studio/bg-studio.webp" alt="" className="studio-bg" />
         </div>
@@ -117,7 +215,7 @@ export default function Studio() {
         </div>
 
         <div className="studio-subject-wrapper">
-          <img src="/assets/Studio/subject-studio.png" alt="Studio Subject" className="studio-subject" />
+          <img src="/assets/Studio/subject-studio.webp" alt="Studio Subject" className="studio-subject" />
         </div>
 
         <div className="studio-overlay" aria-hidden="true" />
@@ -152,34 +250,43 @@ export default function Studio() {
 
       {/* ════════════ GALLERY & PORTFOLIO ════════════ */}
       <section className="studio-gallery" id="portfolio">
-        <div className="studio-gallery-header">
-          <h2>Portafolio de Soluciones</h2>
-        </div>
-
-        <div className="studio-gallery-grid">
-          {galleryImages.map((src, i) => (
-            <div key={i} className="studio-gallery-item">
-              <img src={src} alt={`Proyecto ${i + 1}`} loading="lazy" />
+        <div className="studio-portfolio-shell">
+          <aside className="studio-portfolio-aside">
+            <div className="studio-portfolio-copy">
+              <div className="studio-stats">
+                <p className="studio-stat">10 países de Latam</p>
+                <p className="studio-stat">14 proyectos incubados</p>
+                <p className="studio-stat">30% impacto en comunidades afro</p>
+                <p className="studio-stat">50% tecnologías DMRV</p>
+              </div>
+              <h2>Portafolio de Soluciones</h2>
             </div>
-          ))}
-        </div>
+          </aside>
 
-        <div className="studio-stats">
-          <div className="studio-stat">
-            <p className="stat-number">10</p>
-            <p className="stat-label">Países de Latam</p>
-          </div>
-          <div className="studio-stat">
-            <p className="stat-number">14</p>
-            <p className="stat-label">Proyectos Incubados</p>
-          </div>
-          <div className="studio-stat">
-            <p className="stat-number">86%</p>
-            <p className="stat-label">Impacto en Comunidades Afro</p>
-          </div>
-          <div className="studio-stat">
-            <p className="stat-number">90%</p>
-            <p className="stat-label">Tecnologías AAMIR</p>
+          <div className="studio-gallery-grid">
+            {portfolioColumns.map((columnProjects, columnIndex) => {
+              const columnClass = ['left', 'middle', 'right'][columnIndex];
+              return (
+                <div key={columnClass} className={`studio-portfolio-column studio-portfolio-column--${columnClass}`}>
+                  {Array.from({ length: PORTFOLIO_COLUMN_REPEATS }).flatMap((_, repeatIndex) => (
+                    columnProjects.map((project) => (
+                      <article
+                        key={`${project.name}-${repeatIndex}`}
+                        className={`studio-project-card${repeatIndex > 0 ? ' studio-project-card--clone' : ''}`}
+                        aria-hidden={repeatIndex > 0 ? true : undefined}
+                        aria-label={repeatIndex === 0 ? `${project.name}. ${project.description}` : undefined}
+                      >
+                        <img src={project.image} alt="" loading="eager" decoding="async" />
+                        <div className="studio-project-overlay">
+                          <h3>{project.name}</h3>
+                          <span>Aprende más</span>
+                        </div>
+                      </article>
+                    ))
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -191,62 +298,61 @@ export default function Studio() {
             <img src="/assets/Studio/studio-gallery-1.webp" alt="Studio Work" />
           </div>
           <div className="studio-main-text">
-            <h3>Un Portafolio de Lenguaje Común entre (Teknologías)</h3>
+            <h3>Un Portafolio de Lenguaje Común entre <span>(Tek)nologías</span></h3>
             <p>
-              Experiencias de desarrolladores y ordenamos soluciones en territorio haciendo de nuestras socios con base en el territorio y de nuestros socios emprendedores.
+              Financiamos, co-desarrollamos y probamos soluciones en territorio favorables para la naturaleza, bajo el liderazgo de nuestros socios con base en el territorio y de nuestros socios emprendedores.
             </p>
-            <a href="#" className="link-arrow">
-              Leer más sobre la metodología
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="5 12 19 12M12 5l7 7-7 7"></polyline></svg>
-            </a>
+            <span className="studio-main-kicker">1.6M de invertidos en la naturaleza</span>
           </div>
         </div>
       </section>
 
       {/* ════════════ INFO SECTION ════════════ */}
       <section className="studio-info-section">
+        <svg className="studio-info-map-line" xmlns="http://www.w3.org/2000/svg" width="650" height="972" viewBox="0 0 650 972" fill="none" aria-hidden="true">
+          <path d="M1.99655 970.938L14.1287 757.283L47.7291 564.101L374.09 453.462L429.515 134.803L648.164 1.70846" stroke="#BCDD05" strokeOpacity="0.09" strokeWidth="4" strokeDasharray="8 8" />
+        </svg>
         <div className="studio-info-inner">
           <div className="studio-info-card">
-            <h4>Metodología</h4>
-            <p className="card-label">Tiene doble impacto</p>
-            <p>Nos permite inculcar soluciones innovadoras y tangibles, crear kits de soluciones replicables para la naturaleza, bajo el liderazgo de nuestros socios con base en el territorio y caracterizadas con los mercados verdes globales.</p>
-          </div>
-
-          <div className="studio-info-card">
             <h4>Niveles Sistémicos</h4>
-            <p className="card-label">La solución que proponen</p>
-            <p>Actúan para movilizar soluciones innovadoras y tangibles, crear kits de soluciones replicables para la naturaleza, bajo el liderazgo de nuestros socios con base en el territorio y caracterizadas con los mercados verdes globales.</p>
+            <p>Nos permite visibilizar soluciones innovadoras y tangibles, crear kits de soluciones replicables, fortalecer la posición global de AI C como una región que impulsa transformaciones efectivas de abajo hacia arriba y conectarse con los mercados verdes globales.</p>
           </div>
 
           <div className="studio-info-card">
             <h4>Impacto Local</h4>
-            <p className="card-label">Genera un impacto tangible</p>
-            <p>Genera un impacto tangible hacia en el número de hectáreas conservadas como en la mejora de las condiciones de vida de nuestros socios locales.</p>
+            <p>Genera un impacto tangible tanto en el número de hectáreas conservadas como en la mejora de las condiciones de vida de nuestros socios locales.</p>
           </div>
         </div>
 
-        <div className="studio-levels">
-          <h3>Tres Niveles de Acceso a Iniciativas Especiales</h3>
-          <div className="studio-levels-grid">
-            <div className="level-item">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="2" />
-                <path d="M16 10V16M16 16L12 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <p>Herramientas para generar confianza y potenciar el impacto</p>
-            </div>
-            <div className="level-item">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect x="6" y="6" width="20" height="20" stroke="currentColor" strokeWidth="2" />
-                <path d="M12 16L14 18L20 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <p>Capacidad de preparación y recursos</p>
-            </div>
-            <div className="level-item">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <path d="M16 4L21.18 11.58L29.33 12.33L23.33 17.65L24.76 26L16 22.13L7.24 26L8.67 17.65L2.67 12.33L10.82 11.58L16 4Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-              </svg>
-              <p>Capacidad de sostenibilidad</p>
+        <div className="studio-solutions-lower">
+          <div className="studio-collage" aria-hidden="true">
+            <img src="/assets/Studio/studio-gallery-2.webp" alt="" className="studio-collage-img studio-collage-img--one" loading="eager" decoding="async" />
+            <img src="/assets/Studio/studio-gallery-3.webp" alt="" className="studio-collage-img studio-collage-img--two" loading="eager" decoding="async" />
+            <img src="/assets/Studio/studio-gallery-4.webp" alt="" className="studio-collage-img studio-collage-img--three" loading="eager" decoding="async" />
+          </div>
+
+          <div className="studio-levels">
+            <h3>Tres niveles de apoyo para acceder de manera opcional</h3>
+            <div className="studio-levels-grid">
+              <div className="level-item">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M9 18.5C5.9 18.5 3.5 16.1 3.5 13C3.5 9.9 5.9 7.5 9 7.5C10.8 7.5 12.4 8.3 13.4 9.6M23 13.5C26.1 13.5 28.5 15.9 28.5 19C28.5 22.1 26.1 24.5 23 24.5C21.2 24.5 19.6 23.7 18.6 22.4M11 22.5C14.4 23.8 18.1 22 19.4 18.6M21 9.5C17.6 8.2 13.9 10 12.6 13.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                <p>Herramientas para generar confianza y potenciar el impacto</p>
+              </div>
+              <div className="level-item">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M5 23L12 16L17 21L27 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M20 10H27V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <p>Capacidad de preparación financiera</p>
+              </div>
+              <div className="level-item">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M11 20C7.7 20 5 17.3 5 14S7.7 8 11 8C15.5 8 16.7 14 21 14C24.3 14 27 16.7 27 20S24.3 26 21 26C16.5 26 15.3 20 11 20Z" stroke="currentColor" strokeWidth="2" />
+                </svg>
+                <p>Capacidad de sostenibilidad</p>
+              </div>
             </div>
           </div>
         </div>

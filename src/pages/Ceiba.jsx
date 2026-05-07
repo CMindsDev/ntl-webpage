@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -77,18 +77,20 @@ const podcastLinks = [
 export default function Ceiba() {
   const rootRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current) return;
 
     const ctx = gsap.context(() => {
+      gsap.set('.ceiba-subject', { xPercent: -50 });
+
       /* ─── HERO parallax ─── */
       gsap.to('.ceiba-bg', {
         yPercent: 12, ease: 'none',
-        scrollTrigger: { trigger: '.ceiba-hero', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+        scrollTrigger: { trigger: '.ceiba-hero', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
       gsap.to('.ceiba-subject', {
-        yPercent: 18, scale: 1.03, ease: 'none',
-        scrollTrigger: { trigger: '.ceiba-hero', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+        xPercent: -50, yPercent: 18, scale: 1.03, ease: 'none',
+        scrollTrigger: { trigger: '.ceiba-hero', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
 
       /* Hero entrance */
@@ -130,51 +132,37 @@ export default function Ceiba() {
       }
 
       /* ─── GALLERY parallax (slight rise as you scroll past) ─── */
-      gsap.fromTo('.ceiba-gallery',
-        { y: 60 },
-        {
-          y: -40, ease: 'none',
-          scrollTrigger: { trigger: '.ceiba-gallery', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-        }
-      );
+      gsap.from('.ceiba-gallery', {
+        y: 36, opacity: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '.ceiba-gallery', start: 'top 86%', toggleActions: 'play none none none' },
+      });
 
       /* ─── INFO SECTION ─── */
       gsap.from('.ceiba-info-logo', {
         scale: 0.6, opacity: 0, duration: 0.9, ease: 'back.out(1.5)',
-        scrollTrigger: { trigger: '.ceiba-info', start: 'top 78%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.ceiba-info', start: 'top 78%', toggleActions: 'play none none none' },
       });
       gsap.from('.ceiba-info-sub', {
         y: 24, opacity: 0, duration: 0.8, delay: 0.15, ease: 'power3.out',
-        scrollTrigger: { trigger: '.ceiba-info', start: 'top 75%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.ceiba-info', start: 'top 75%', toggleActions: 'play none none none' },
       });
       gsap.from('.ceiba-info-divider', {
         scaleX: 0, transformOrigin: 'center', opacity: 0, duration: 0.9, delay: 0.25, ease: 'power3.out',
-        scrollTrigger: { trigger: '.ceiba-info', start: 'top 75%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.ceiba-info', start: 'top 75%', toggleActions: 'play none none none' },
       });
       gsap.from('.ceiba-info-text', {
         y: 40, opacity: 0, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: '.ceiba-info', start: 'top 70%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.ceiba-info', start: 'top 70%', toggleActions: 'play none none none' },
       });
       gsap.from('.ceiba-info-btn', {
         y: 20, opacity: 0, duration: 0.7, delay: 0.2, ease: 'power3.out',
-        scrollTrigger: { trigger: '.ceiba-info', start: 'top 65%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.ceiba-info', start: 'top 65%', toggleActions: 'play none none none' },
       });
-      /* Slow parallax drift on the info logo for life */
-      gsap.to('.ceiba-info-logo', {
-        y: -30, ease: 'none',
-        scrollTrigger: { trigger: '.ceiba-info', start: 'top bottom', end: 'bottom top', scrub: 1 },
-      });
-
       /* ─── SHAPES parallax ─── */
       document.querySelectorAll('.ceiba-shape-item').forEach((el, i) => {
         gsap.from(el, {
           y: 40 + i * 15, opacity: 0, duration: 0.8, delay: i * 0.1, ease: 'power2.out',
-          scrollTrigger: { trigger: '.ceiba-shapes', start: 'top 85%', toggleActions: 'play none none reverse' },
-        });
-        /* Continuous gentle parallax — different speeds per shape */
-        gsap.to(el, {
-          y: (i % 2 === 0 ? -30 : -55), ease: 'none',
-          scrollTrigger: { trigger: '.ceiba-shapes', start: 'top bottom', end: 'bottom top', scrub: 1 + i * 0.15 },
+          scrollTrigger: { trigger: '.ceiba-shapes', start: 'top 85%', toggleActions: 'play none none none' },
         });
       });
 
@@ -185,12 +173,6 @@ export default function Ceiba() {
           scale: 1, rotate: 0, opacity: 1,
           duration: 0.6, delay: i * 0.08, ease: 'back.out(1.5)',
           scrollTrigger: { trigger: '.ceiba-podcast', start: 'top 85%', toggleActions: 'play none none none' },
-        });
-        // Bob parallax — continuous
-        const dir = i % 2 === 0 ? -1 : 1;
-        gsap.to(el, {
-          y: 24 * dir, ease: 'none',
-          scrollTrigger: { trigger: '.ceiba-podcast', start: 'top bottom', end: 'bottom top', scrub: 1 + i * 0.15 },
         });
       });
 
@@ -209,11 +191,6 @@ export default function Ceiba() {
         scrollTrigger: { trigger: '.ceiba-podcast', start: 'top 80%', toggleActions: 'play none none none' },
       });
 
-      /* Background glow subtle drift */
-      gsap.to('.ceiba-podcast-glow', {
-        xPercent: 8, yPercent: -6, ease: 'none',
-        scrollTrigger: { trigger: '.ceiba-podcast', start: 'top bottom', end: 'bottom top', scrub: 1.5 },
-      });
     }, rootRef);
 
     return () => ctx.revert();
@@ -234,7 +211,7 @@ export default function Ceiba() {
         </div>
 
         <div className="ceiba-subject-wrapper">
-          <img src="/assets/CEIBA/lina-subject.png" alt="Speaker CEIBA" className="ceiba-subject" />
+          <img src="/assets/CEIBA/lina-subject.webp" alt="Speaker CEIBA" className="ceiba-subject" />
         </div>
 
         <div className="ceiba-overlay" aria-hidden="true" />
@@ -273,7 +250,7 @@ export default function Ceiba() {
           {/* Double the images for seamless loop */}
           {[...galleryImages, ...galleryImages].map((src, i) => (
             <div key={i} className="ceiba-gallery-item">
-              <img src={src} alt={`Galería CEIBA ${(i % galleryImages.length) + 1}`} loading="lazy" />
+              <img src={src} alt={`Galería CEIBA ${(i % galleryImages.length) + 1}`} loading="eager" decoding="async" />
             </div>
           ))}
         </div>
@@ -306,7 +283,7 @@ export default function Ceiba() {
         <div className="ceiba-shapes-track">
           {shapes.map((src, i) => (
             <div key={i} className="ceiba-shape-item">
-              <img src={src} alt="" loading="lazy" />
+              <img src={src} alt="" loading="eager" decoding="async" />
             </div>
           ))}
         </div>
@@ -319,7 +296,7 @@ export default function Ceiba() {
           <div className="ceiba-podcast-personas">
             {personas.map((src, i) => (
               <div key={i} className="ceiba-persona-wrap" data-i={i}>
-                <img src={src} alt={`Voz Somos Raíces ${i + 1}`} className="ceiba-persona" loading="lazy" />
+                <img src={src} alt={`Voz Somos Raíces ${i + 1}`} className="ceiba-persona" loading="eager" decoding="async" />
               </div>
             ))}
           </div>

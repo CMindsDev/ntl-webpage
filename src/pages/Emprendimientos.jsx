@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import GlassFrame from '../components/GlassFrame.jsx';
@@ -10,16 +10,18 @@ export default function Emprendimientos({ onFrameToggle }) {
   const videoRef = useRef(null);
   const [muted, setMuted] = useState(true);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!rootRef.current) return;
     const ctx = gsap.context(() => {
+      gsap.set('.regen-people', { xPercent: -50 });
+
       gsap.to('.regen-bg', {
         yPercent: 12, ease: 'none',
-        scrollTrigger: { trigger: '.regen-section', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+        scrollTrigger: { trigger: '.regen-section', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
       gsap.to('.regen-people', {
-        yPercent: 18, scale: 1.03, ease: 'none',
-        scrollTrigger: { trigger: '.regen-section', start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+        xPercent: -50, yPercent: 18, scale: 1.03, ease: 'none',
+        scrollTrigger: { trigger: '.regen-section', start: 'top top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
 
       gsap.from('.regen-content-inner', {
@@ -46,7 +48,7 @@ export default function Emprendimientos({ onFrameToggle }) {
 
       gsap.to('.regen-content', {
         y: -50, opacity: 0, ease: 'none',
-        scrollTrigger: { trigger: '.regen-section', start: '60% top', end: 'bottom top', scrub: 0.6 },
+        scrollTrigger: { trigger: '.regen-section', start: '60% top', end: 'bottom top', scrub: 0.25, fastScrollEnd: true },
       });
 
       const video = videoRef.current;
@@ -80,38 +82,33 @@ export default function Emprendimientos({ onFrameToggle }) {
 
       gsap.from('.regen-100k-fan .fan-img', {
         y: 60, opacity: 0, stagger: 0.1, duration: 1, ease: 'back.out(1.4)',
-        scrollTrigger: { trigger: '.regen-100k-section', start: 'top 75%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.regen-100k-section', start: 'top 75%', toggleActions: 'play none none none' },
       });
       gsap.from('.regen-100k-info', {
         y: 40, opacity: 0, duration: 1, delay: 0.2, ease: 'power3.out',
-        scrollTrigger: { trigger: '.regen-100k-section', start: 'top 75%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.regen-100k-section', start: 'top 75%', toggleActions: 'play none none none' },
       });
 
-      document.querySelectorAll('.regen-blockquote .word').forEach((word) => {
-        ScrollTrigger.create({
-          trigger: word,
-          start: 'top 85%',
-          end: 'top 55%',
-          scrub: true,
-          onUpdate: (self) => {
-            if (self.progress > 0.3) word.classList.add('is-revealed');
-            else word.classList.remove('is-revealed');
-          },
-        });
+      gsap.to('.regen-blockquote .word', {
+        opacity: 1,
+        stagger: 0.035,
+        duration: 0.45,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.regen-quote-section', start: 'top 72%', toggleActions: 'play none none none' },
       });
 
       gsap.from('.regen-quote-icon', {
         scale: 0.5, opacity: 0, duration: 0.8, ease: 'back.out(1.6)',
-        scrollTrigger: { trigger: '.regen-quote-section', start: 'top 80%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.regen-quote-section', start: 'top 80%', toggleActions: 'play none none none' },
       });
 
       gsap.from('.regen-condition-row', {
         y: 50, opacity: 0, stagger: 0.2, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: '.regen-conditions-right', start: 'top 80%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.regen-conditions-right', start: 'top 80%', toggleActions: 'play none none none' },
       });
       gsap.from('.regen-conditions-left', {
         x: -40, opacity: 0, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: '.regen-conditions-section', start: 'top 80%', toggleActions: 'play none none reverse' },
+        scrollTrigger: { trigger: '.regen-conditions-section', start: 'top 80%', toggleActions: 'play none none none' },
       });
     }, rootRef);
 
@@ -126,7 +123,7 @@ export default function Emprendimientos({ onFrameToggle }) {
       {/* HERO */}
       <section className="regen-section">
         <div className="regen-bg-wrapper">
-          <img src="/assets/regenera/bg-regenera.png" alt="" className="regen-bg" />
+          <img src="/assets/regenera/bg-regenera.webp" alt="" className="regen-bg" />
         </div>
 
         <div className="regen-giant-text" aria-hidden="true">
@@ -136,7 +133,7 @@ export default function Emprendimientos({ onFrameToggle }) {
         </div>
 
         <div className="regen-people-wrapper">
-          <img src="/assets/regenera/people-regen.png" alt="Emprendedores regenerativos" className="regen-people" />
+          <img src="/assets/regenera/people-regen.webp" alt="Emprendedores regenerativos" className="regen-people" />
         </div>
 
         <div className="regen-overlay" aria-hidden="true" />
@@ -175,10 +172,12 @@ export default function Emprendimientos({ onFrameToggle }) {
           ref={videoRef}
           className="regen-video"
           src={REGENERA_VIDEO_SRC}
+          poster="/assets/regenera/regenera-poster.webp"
           muted={muted}
           loop
           playsInline
           preload="metadata"
+          onLoadedData={(event) => event.currentTarget.classList.add('is-ready')}
         />
         <button
           type="button"
@@ -215,9 +214,9 @@ export default function Emprendimientos({ onFrameToggle }) {
       <section className="regen-100k-section">
         <div className="regen-100k-content">
           <div className="regen-100k-fan">
-            <img src="/assets/regenera/fan_1.png" alt="Emprendedor 1" className="fan-img fan-left" loading="lazy" />
-            <img src="/assets/regenera/fan_3.png" alt="Emprendedor 3" className="fan-img fan-right" loading="lazy" />
-            <img src="/assets/regenera/fan_2.png" alt="Emprendedor 2" className="fan-img fan-center" loading="lazy" />
+            <img src="/assets/regenera/fan_1.webp" alt="Emprendedor 1" className="fan-img fan-left" loading="eager" decoding="async" />
+            <img src="/assets/regenera/fan_3.webp" alt="Emprendedor 3" className="fan-img fan-right" loading="eager" decoding="async" />
+            <img src="/assets/regenera/fan_2.webp" alt="Emprendedor 2" className="fan-img fan-center" loading="eager" decoding="async" />
           </div>
           <div className="regen-100k-info">
             <h3 className="regen-100k-heading">Hasta <span className="regen-100k-number">100K USD</span></h3>
