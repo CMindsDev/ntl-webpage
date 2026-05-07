@@ -2194,9 +2194,9 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .ecos-subject {
   position: absolute;
   left: 50%;
-  bottom: 20%;
+  bottom: 4%;
   width: auto;
-  height: 82%;
+  height: 96%;
   object-fit: contain;
   transform: translateX(-50%);
   transform-origin: center bottom;
@@ -2302,9 +2302,9 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   .ecos-giant-text { top: 26%; }
   .ecos-bg { object-position: 58% center; }
   .ecos-subject {
-    height: 76%;
+    height: 90%;
     left: 50%;
-    bottom: 20%;
+    bottom: 4%;
   }
 }
 
@@ -2320,9 +2320,9 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
     object-position: 58% center;
   }
   .ecos-subject {
-    height: 68%;
+    height: 82%;
     left: 52%;
-    bottom: 18%;
+    bottom: 5%;
   }
   .ecos-giant-text {
     top: 23%;
