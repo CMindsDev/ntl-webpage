@@ -5,11 +5,11 @@ import { gsap } from 'gsap';
 import GlassFrame from './GlassFrame.jsx';
 
 const links = [
-  { to: '/',                 label: 'Inicio',          icon: '/assets/icons/Navbar.svg',             iconWidth: 18, iconHeight: 18 },
-  { to: '/emprendimientos',  label: 'Emprendimiento',  icon: '/assets/icons/nav-emprendimiento.svg', iconWidth: 20, iconHeight: 20 },
-  { to: '/ceiba',            label: 'CEIBA',            icon: '/assets/icons/nav-ceiba.svg',          iconWidth: 30, iconHeight: 17 },
-  { to: '/studio',           label: 'Studio',           icon: '/assets/icons/nav-studio.svg',         iconWidth: 19, iconHeight: 18 },
-  { to: '/ecos',             label: 'Ecos',             icon: '/assets/icons/nav-ecos.svg',           iconWidth: 18, iconHeight: 19 },
+  { to: '/',                 label: 'Inicio',          mobileLabel: 'Inicio',   icon: '/assets/icons/Navbar.svg',             iconWidth: 18, iconHeight: 18 },
+  { to: '/emprendimientos',  label: 'Emprendimiento',  mobileLabel: 'Empresas', icon: '/assets/icons/nav-emprendimiento.svg', iconWidth: 20, iconHeight: 20 },
+  { to: '/ceiba',            label: 'CEIBA',            mobileLabel: 'CEIBA',    icon: '/assets/icons/nav-ceiba.svg',          iconWidth: 30, iconHeight: 17 },
+  { to: '/studio',           label: 'Studio',           mobileLabel: 'Studio',   icon: '/assets/icons/nav-studio.svg',         iconWidth: 19, iconHeight: 18 },
+  { to: '/ecos',             label: 'Ecos',             mobileLabel: 'Ecos',     icon: '/assets/icons/nav-ecos.svg',           iconWidth: 18, iconHeight: 19 },
 ];
 
 export default function Nav() {
@@ -24,7 +24,7 @@ export default function Nav() {
 
     const updateIndicator = () => {
       const active = pill.querySelector('.nav-link.active');
-      const activeText = active?.querySelector('.nav-text');
+      const activeText = active?.querySelector('.nav-text--desktop');
       if (!active || !activeText) return;
       const icon = indicator.querySelector('img');
       const iconWidth = Number(active.dataset.iconWidth) || 18;
@@ -108,7 +108,11 @@ export default function Nav() {
                   data-icon-height={l.iconHeight}
                   className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
                 >
-                  <span className="nav-text">{l.label}</span>
+                  <span className="nav-mobile-icon" aria-hidden="true">
+                    <img src={l.icon} alt="" width={l.iconWidth} height={l.iconHeight} />
+                  </span>
+                  <span className="nav-text nav-text--desktop">{l.label}</span>
+                  <span className="nav-text nav-text--mobile">{l.mobileLabel}</span>
                 </NavLink>
               ))}
             </div>
